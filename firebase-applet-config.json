@@ -1,0 +1,12 @@
+{
+  "projectId": "ldos-attack-detector",
+  "appId": "1:220603454619:web:e0e8a340c33e803687223e",
+  "apiKey": "AIzaSyCpbs6TOAnWh85QeHrgYwNHGxjFZRxriR0",
+  "authDomain": "ldos-attack-detector.firebaseapp.com",
+  "firestoreDatabaseId": "ai-studio-ldosattackdetect-d95f2bb1-4876-40d7-985a-ebedd000e593",
+  "storageBucket": "ldos-attack-detector.firebasestorage.app",
+  "messagingSenderId": "220603454619",
+  "measurementId": "G-51YHKLJCWF",
+  "oAuthClientId": "220603454619-fnuopof17ej9v0gn9upfb7aopjn0hoas.apps.googleusercontent.com",
+  "recaptchaSiteKey": ""
+}

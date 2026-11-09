@@ -1,0 +1,162 @@
+{
+  "entities": {
+    "ExperimentRun": {
+      "title": "ExperimentRun",
+      "description": "Persisted LDoS detection run and comparative experiment evaluation summary.",
+      "type": "object",
+      "properties": {
+        "sessionId": {
+          "type": "string",
+          "description": "Workspace session identifier.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "experimentName": {
+          "type": "string",
+          "description": "Human-readable name of the experiment configuration.",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "jobId": {
+          "type": "string",
+          "description": "Unique identifier of the backend processing job.",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "datasetFilename": {
+          "type": "string",
+          "description": "Name of the uploaded or benchmark CSV dataset analysed.",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "transform": {
+          "type": "string",
+          "description": "Time-frequency signal transform applied.",
+          "enum": ["FSWT", "STFT", "CWT"],
+          "maxLength": 16
+        },
+        "featureSet": {
+          "type": "string",
+          "description": "Selected feature extraction set.",
+          "enum": ["original_4", "extended_6"],
+          "maxLength": 32
+        },
+        "featureCount": {
+          "type": "number",
+          "description": "Number of extracted features (4 or 6)."
+        },
+        "model": {
+          "type": "string",
+          "description": "Supervised machine learning classifier trained.",
+          "enum": ["decision_tree", "random_forest"],
+          "maxLength": 32
+        },
+        "splitStrategy": {
+          "type": "string",
+          "description": "Train/test validation split strategy.",
+          "enum": ["stratified", "temporal"],
+          "maxLength": 32
+        },
+        "accuracy": {
+          "type": "number",
+          "description": "Test set detection accuracy in [0, 1]."
+        },
+        "precision": {
+          "type": "number",
+          "description": "Test set precision in [0, 1]."
+        },
+        "recall": {
+          "type": "number",
+          "description": "Test set recall / sensitivity (TPR) in [0, 1]."
+        },
+        "specificity": {
+          "type": "number",
+          "description": "Test set specificity (TNR) in [0, 1]."
+        },
+        "f1Score": {
+          "type": "number",
+          "description": "Test set F1 score in [0, 1]."
+        },
+        "fpr": {
+          "type": "number",
+          "description": "Test set False Positive Rate (1 - TNR) in [0, 1]."
+        },
+        "tp": {
+          "type": "number",
+          "description": "True Positive window count."
+        },
+        "tn": {
+          "type": "number",
+          "description": "True Negative window count."
+        },
+        "fp": {
+          "type": "number",
+          "description": "False Positive window count."
+        },
+        "fn": {
+          "type": "number",
+          "description": "False Negative window count."
+        },
+        "totalWindowsCount": {
+          "type": "number",
+          "description": "Total signal windows analysed."
+        },
+        "normalWindowsCount": {
+          "type": "number",
+          "description": "Number of windows classified as Normal Traffic (0)."
+        },
+        "ldosWindowsCount": {
+          "type": "number",
+          "description": "Number of windows classified as LDoS Attack (1)."
+        },
+        "overallVerdict": {
+          "type": "string",
+          "description": "Primary detection verdict.",
+          "enum": ["LDOS_DETECTED", "NORMAL_TRAFFIC"],
+          "maxLength": 32
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when the experiment record was saved."
+        }
+      },
+      "required": [
+        "sessionId",
+        "experimentName",
+        "jobId",
+        "datasetFilename",
+        "transform",
+        "featureSet",
+        "featureCount",
+        "model",
+        "splitStrategy",
+        "accuracy",
+        "precision",
+        "recall",
+        "specificity",
+        "f1Score",
+        "fpr",
+        "tp",
+        "tn",
+        "fp",
+        "fn",
+        "totalWindowsCount",
+        "normalWindowsCount",
+        "ldosWindowsCount",
+        "overallVerdict",
+        "createdAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/experiments/{experimentId}": {
+      "schema": {
+        "$ref": "#/entities/ExperimentRun"
+      },
+      "description": "Stores LDoS detection jobs and comparative experiment records without login requirements."
+    }
+  }
+}

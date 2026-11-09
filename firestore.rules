@@ -1,0 +1,126 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isProbability(val) {
+      return (val is int || val is float) && val >= 0 && val <= 1;
+    }
+
+    function isNonNegativeNumber(val) {
+      return (val is int || val is float) && val >= 0 && val <= 1000000;
+    }
+
+    function isValidExperiment(data) {
+      let keys = [
+        'sessionId',
+        'experimentName',
+        'jobId',
+        'datasetFilename',
+        'transform',
+        'featureSet',
+        'featureCount',
+        'model',
+        'splitStrategy',
+        'accuracy',
+        'precision',
+        'recall',
+        'specificity',
+        'f1Score',
+        'fpr',
+        'tp',
+        'tn',
+        'fp',
+        'fn',
+        'totalWindowsCount',
+        'normalWindowsCount',
+        'ldosWindowsCount',
+        'overallVerdict',
+        'createdAt'
+      ];
+      return data.keys().hasAll(keys)
+        && data.keys().hasOnly(keys)
+        && data.sessionId is string
+        && data.sessionId.size() >= 1
+        && data.sessionId.size() <= 128
+        && data.sessionId.matches('^[a-zA-Z0-9_\\-]+$')
+        && data.experimentName is string
+        && data.experimentName.size() >= 1
+        && data.experimentName.size() <= 120
+        && data.jobId is string
+        && data.jobId.size() >= 1
+        && data.jobId.size() <= 64
+        && data.jobId.matches('^[a-zA-Z0-9_\\-]+$')
+        && data.datasetFilename is string
+        && data.datasetFilename.size() >= 1
+        && data.datasetFilename.size() <= 200
+        && data.transform is string
+        && data.transform.size() <= 16
+        && data.transform in ['FSWT', 'STFT', 'CWT']
+        && data.featureSet is string
+        && data.featureSet.size() <= 32
+        && data.featureSet in ['original_4', 'extended_6']
+        && (data.featureCount == 4 || data.featureCount == 6)
+        && data.model is string
+        && data.model.size() <= 32
+        && data.model in ['decision_tree', 'random_forest']
+        && data.splitStrategy is string
+        && data.splitStrategy.size() <= 32
+        && data.splitStrategy in ['stratified', 'temporal']
+        && isProbability(data.accuracy)
+        && isProbability(data.precision)
+        && isProbability(data.recall)
+        && isProbability(data.specificity)
+        && isProbability(data.f1Score)
+        && isProbability(data.fpr)
+        && isNonNegativeNumber(data.tp)
+        && isNonNegativeNumber(data.tn)
+        && isNonNegativeNumber(data.fp)
+        && isNonNegativeNumber(data.fn)
+        && isNonNegativeNumber(data.totalWindowsCount)
+        && isNonNegativeNumber(data.normalWindowsCount)
+        && isNonNegativeNumber(data.ldosWindowsCount)
+        && data.overallVerdict is string
+        && data.overallVerdict.size() <= 32
+        && data.overallVerdict in ['LDOS_DETECTED', 'NORMAL_TRAFFIC']
+        && data.createdAt is timestamp;
+    }
+
+    match /experiments/{experimentId} {
+      allow get: if isValidId(experimentId)
+        && existing().sessionId is string
+        && existing().sessionId.size() <= 128;
+
+      allow list: if resource.data.sessionId is string
+        && resource.data.sessionId.size() <= 128;
+
+      allow create: if isValidId(experimentId)
+        && isValidExperiment(incoming())
+        && incoming().createdAt == request.time;
+
+      allow update: if isValidId(experimentId)
+        && isValidExperiment(incoming())
+        && incoming().sessionId == existing().sessionId
+        && incoming().createdAt == existing().createdAt
+        && incoming().diff(existing()).affectedKeys().hasOnly(['experimentName']);
+
+      allow delete: if isValidId(experimentId)
+        && existing().sessionId is string;
+    }
+  }
+}

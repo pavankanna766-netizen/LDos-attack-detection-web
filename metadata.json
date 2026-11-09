@@ -1,0 +1,6 @@
+{
+  "name": "LDoS Attack Detector",
+  "description": "Low-Rate Denial-of-Service (LDoS) Attack Detection Platform using Frequency Slice Wavelet Transform (FSWT), Signal Processing, and Machine Learning.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
