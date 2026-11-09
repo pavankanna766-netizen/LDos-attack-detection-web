@@ -1396,7 +1396,7 @@ export const ResultsDashboardPage: React.FC<ResultsDashboardPageProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <a
             href={getDownloadUrl(jobId, 'predictions.csv')}
-            download
+            download={`ldos_predictions_${jobId}.csv`}
             className="flex items-center justify-between p-4 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-cyan-500 dark:hover:border-cyan-400 bg-slate-50/50 dark:bg-slate-950/40 transition-colors"
           >
             <div>
@@ -1412,7 +1412,7 @@ export const ResultsDashboardPage: React.FC<ResultsDashboardPageProps> = ({
 
           <a
             href={getDownloadUrl(jobId, 'features.csv')}
-            download
+            download={`ldos_features_${config.transform}_${jobId}.csv`}
             className="flex items-center justify-between p-4 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-cyan-500 dark:hover:border-cyan-400 bg-slate-50/50 dark:bg-slate-950/40 transition-colors"
           >
             <div>
@@ -1428,7 +1428,7 @@ export const ResultsDashboardPage: React.FC<ResultsDashboardPageProps> = ({
 
           <a
             href={getDownloadUrl(jobId, 'metrics.csv')}
-            download
+            download={`ldos_evaluation_metrics_${jobId}.csv`}
             className="flex items-center justify-between p-4 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-cyan-500 dark:hover:border-cyan-400 bg-slate-50/50 dark:bg-slate-950/40 transition-colors"
           >
             <div>
